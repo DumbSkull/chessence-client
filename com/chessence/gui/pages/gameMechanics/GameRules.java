@@ -26,7 +26,6 @@ public class GameRules {
 
 
     public GameRules(AbstractPiece boardMatrix[][]){
-        System.out.println("Game Rules");
         this.checkWhite = false;
         this.checkBlack = false;
         gameUpdate(boardMatrix);
@@ -34,20 +33,17 @@ public class GameRules {
     }
 
     public static void gameUpdate(AbstractPiece boardMatrix[][]){
-        System.out.println("Update Game Rules");
 
         createWhiteMoves(boardMatrix);
         createBlackMoves(boardMatrix);
 
         if(blackMoves.contains(whiteKing.getCoordinates())){
-            System.out.println("White is Check");
             checkWhite = true;
         }
         else
             checkWhite = false;
 
         if(whiteMoves.contains(blackKing.getCoordinates())){
-            System.out.println("Black is Check");
             checkBlack = true;
         }
         else
@@ -63,7 +59,6 @@ public class GameRules {
                     piece = boardMatrix[i][j];
 
                     if(piece.isWhite()){
-                        System.out.println("White Validation");
                         moves = piece.getValidDestinations(boardMatrix, true);
                         if(piece instanceof King)
                             whiteKing = piece;
@@ -93,7 +88,6 @@ public class GameRules {
                     piece = boardMatrix[i][j];
 
                     if(!piece.isWhite()){
-                        System.out.println("Black Validation");
                         moves = piece.getValidDestinations(boardMatrix, true);
                         if(piece instanceof King)
                             blackKing = piece;
@@ -150,10 +144,6 @@ public class GameRules {
             else
                 isSaved = true;
         }
-
-        System.out.println("Saved Check Running:");
-        System.out.println("X:" + coordinates.getKey());
-        System.out.println("Y:" + coordinates.getValue());
 
         boardMatrix[x][y] = checkPiece;
         boardMatrix[coordinates.getKey()][coordinates.getValue()] = tempPiece;

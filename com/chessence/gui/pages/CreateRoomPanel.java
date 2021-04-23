@@ -24,7 +24,6 @@ public class CreateRoomPanel extends ParentPanel implements ActionListener {
     //Data value and structure will be changed later
     public static char Player_Status = 'P';
     public static boolean isPrivate = true;
-
     public static String[] PLAYERS = {"-", "-"};
     public static String[] SPECTATORS = {"-", "-", "-", "-"};
 

@@ -1,6 +1,7 @@
 package com.chessence.gui.pages.components;
 
 import com.chessence.Message;
+import com.chessence.gui.pages.CreateRoomPanel;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -105,7 +106,15 @@ public class ChatBox extends JPanel {
         textBox.addKeyListener(new KeyListener() {
             @Override
             public void keyReleased(KeyEvent e) {
+
                 if (e.getKeyCode() == 10) {
+                    if(CreateRoomPanel.Player_Status=='S')
+                    {
+                        textBox.setText("Only players can chat!");
+                        textBoxInput = "Only players can chat!";
+                        return;
+                    }
+
                     if (textBox.getText().trim() != "") {
                         String text = textBox.getText().trim();
                         textBox.setText("");

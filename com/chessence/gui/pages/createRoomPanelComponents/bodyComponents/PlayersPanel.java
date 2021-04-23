@@ -21,7 +21,7 @@ public class PlayersPanel extends JPanel implements ActionListener {
     int cornerRadius = 15;
     Color backgroundColor = Color.decode(CREAM_ORANGE);
 
-    private static final RoundedButton playerJoinSpectatorButton = new RoundedButton("Join Spectator", new Font("Roboto", Font.PLAIN, 15),
+    public static final RoundedButton playerJoinSpectatorButton = new RoundedButton("Join Spectator", new Font("Roboto", Font.PLAIN, 15),
             Color.decode(CREAM_ORANGE), Color.decode(RED), Color.decode(DARK_RED),
             10, new Dimension(200, 40));
 

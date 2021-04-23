@@ -1,6 +1,7 @@
 package com.chessence;
 
 import com.chessence.gui.pages.CreateRoomPanel;
+import com.chessence.gui.pages.GameScreenPanel;
 import com.chessence.gui.pages.ParentPanel;
 import com.chessence.gui.pages.components.Board;
 import com.chessence.gui.pages.components.ChatBox;
@@ -88,6 +89,8 @@ public class ClientReader extends Thread {
                                     break;
                                 }
                             }
+                            if(CreateRoomPanel.Player_Status=='S')
+                                SpectatorsPanel.joinPlayerButton.setEnabled(true);
                         }
                         else if(((Message) receivedObject).getSecondaryMessage().contains("wasSpectator")){
                             for (int i = 0; i < 4; i++) {
@@ -102,6 +105,10 @@ public class ClientReader extends Thread {
                                     break;
                                 }
                             }
+                            if(!CreateRoomPanel.PLAYERS[1].equals("-")){
+                                if(CreateRoomPanel.Player_Status=='S')
+                                    SpectatorsPanel.joinPlayerButton.setEnabled(false);
+                            }
                         }
                         PlayersPanel.updatePlayerNames();
                         SpectatorsPanel.updateSpecatators();
@@ -112,7 +119,13 @@ public class ClientReader extends Thread {
                         break;
                     }
 
+                    //=======================================================================================================
+                    //When the opponent starts the game
                     else if(((Message) receivedObject).getTypeOfMessage().contains("gameStarted")){
+                        String whitePlayer = ((Message) receivedObject).getSecondaryMessage();
+                        String blackPlayer = CreateRoomPanel.PLAYERS[0].equals(whitePlayer) ? CreateRoomPanel.PLAYERS[1] : CreateRoomPanel.PLAYERS[0];
+                        Tile.isPlayerWhite = false;
+                        GameScreenPanel.initializeNames(whitePlayer, blackPlayer);
                         ParentPanel.cardLayout.show(ParentPanel.container, "GameScreen");
                     }
                 } else if (receivedObject instanceof Move) {
@@ -140,9 +153,8 @@ public class ClientReader extends Thread {
                     Board.tileMatrix[move.getTo()[0]][move.getTo()[1]].updateImage();
                     Board.tileMatrix[move.getTo()[0]][move.getTo()[1]].validate();
                     Board.tileMatrix[move.getTo()[0]][move.getTo()[1]].repaint();
-                    //
-                    //-----------------------
 
+                    Tile.isCurrentTurn = true;
                     System.out.println("\nMove operation: [" + move.getFrom()[0] + ", " + move.getFrom()[1] + "] -> [" + move.getTo()[0] + ", " + move.getTo()[1] + "]");
                 }
             } catch (IOException e) {

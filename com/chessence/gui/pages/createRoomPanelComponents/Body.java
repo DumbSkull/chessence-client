@@ -8,7 +8,9 @@ import javax.swing.border.EmptyBorder;
 
 import com.chessence.Message;
 import com.chessence.gui.pages.CreateRoomPanel;
+import com.chessence.gui.pages.GameScreenPanel;
 import com.chessence.gui.pages.ParentPanel;
+import com.chessence.gui.pages.components.Tile;
 import com.chessence.gui.pages.createRoomPanelComponents.bodyComponents.*;
 
 import java.awt.*;
@@ -176,9 +178,16 @@ public class Body extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == this.startGameButton) {
+            if(CreateRoomPanel.Player_Status=='S')
+                return;
             if (!CreateRoomPanel.PLAYERS[0].equals("-") && !CreateRoomPanel.PLAYERS[1].equals("-"))
             {
+                Tile.isPlayerWhite = true;
+                String whitePlayer = ParentPanel.username;
+                String blackPlayer = CreateRoomPanel.PLAYERS[0].equals(whitePlayer) ? CreateRoomPanel.PLAYERS[1] : CreateRoomPanel.PLAYERS[0];
+                GameScreenPanel.initializeNames(whitePlayer, blackPlayer);
                 var gameStartedMessage = new Message("", "gameStarted");
+                gameStartedMessage.setSecondaryMessage(ParentPanel.username);
                 try {
                     CreateRoomPanel.objectOutputStream.writeObject(gameStartedMessage);
                     ParentPanel.cardLayout.show(ParentPanel.container, "GameScreen");

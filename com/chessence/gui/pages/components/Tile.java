@@ -6,6 +6,8 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import com.chessence.Move;
+import com.chessence.gui.pages.CreateRoomPanel;
 import com.chessence.gui.pages.gameMechanics.AbstractPiece;
 import com.chessence.gui.pages.gameMechanics.King;
 import com.chessence.gui.pages.gameMechanics.GameRules;
@@ -165,8 +167,10 @@ public class Tile extends JPanel {
     }
 
     private void mouseClickAction() {
+        if(CreateRoomPanel.Player_Status == 'S')
+            return;
         //check if it is current player's turn:
-        if (isCurrentTurn) {
+        if (isCurrentTurn && (this.piece.isWhite() == Tile.isPlayerWhite)) {
             //immediately set isUpdated to false to stop other tiles form unnecessarily updating:
             isUpdated = false;
 
@@ -177,10 +181,17 @@ public class Tile extends JPanel {
             //if a piece has been moved:
             if (highlightedCoordinates != null && highlightedCoordinates.contains(tileCoordinates)) {
                 //set current player's turn to false after moving:
-                //Tile.isCurrentTurn = false;
+                Tile.isCurrentTurn = false;
 
                 //update the boardMatrix with the move instruction:
                 Board.boardMatrix[currentSelected.getKey()][currentSelected.getValue()].move(tileCoordinates, boardMatrix);
+
+                //sending the move operation to every room member:-----------
+                int[] from = {currentSelected.getKey(), currentSelected.getValue()};
+                int[] to = {tileCoordinates.getKey(), tileCoordinates.getValue()};
+                var moveToSendEveryone = new Move(from, to);
+
+                //---------------------------------------------------------
 
                 GameRules.gameUpdate(boardMatrix);
 
@@ -212,7 +223,6 @@ public class Tile extends JPanel {
             //if the current tile has a piece, and if it is clicked, update the highlightedCoordinates variable to show the possible destinations of the current tile:
             // ---- && piece.isWhite() == Tile.isPlayerWhite ---- //
             if (piece != null) {
-                System.out.println("Tile Validation");
                 highlightedCoordinates = piece.getValidDestinations(boardMatrix, false);
             }
         }

@@ -27,7 +27,7 @@ public class SpectatorsPanel extends JPanel implements ActionListener {
     private static JLabel spectator3;
     private static JLabel spectator4;
 
-    private static final RoundedButton joinPlayerButton = new RoundedButton("Become a Player", new Font("Roboto", Font.PLAIN, 20),
+    public static final RoundedButton joinPlayerButton = new RoundedButton("Become a Player", new Font("Roboto", Font.PLAIN, 20),
             Color.decode(CREAM_ORANGE), Color.decode(RED), Color.decode(DARK_RED),
             10, new Dimension(200, 40));
 

@@ -26,7 +26,7 @@ public class Board extends JPanel {
     public static int len;
     public static AbstractPiece boardMatrix[][] = new AbstractPiece[8][8];
     public static Tile tileMatrix[][] = new Tile[8][8];
-    private boolean isPlayerWhite;
+    public static boolean isPlayerWhite;
 
     public Board(int W, int H, boolean isPlayerWhite) {
 

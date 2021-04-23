@@ -20,11 +20,13 @@ public class GameScreenPanel extends ParentPanel implements ActionListener {
     public Socket clientSocket;
     public ObjectOutputStream objectOutputStream;
     public ObjectInputStream objectInputStream;
+    public static JLabel player1 = null;
+    public static JLabel player2 = null;
 
     //private AbstractPiece boardMatrix[][] = new AbstractPiece[8][8];
-    public JButton EXIT = new RoundedButton((CreateRoomPanel.Player_Status == 'P'?"Forfeit Match" : "Leave Lobby"),new Color(0xE79E4F), new Color(0xB8742A), 15);
+    public JButton EXIT = new RoundedButton((CreateRoomPanel.Player_Status == 'P' ? "Forfeit Match" : "Leave Lobby"), new Color(0xE79E4F), new Color(0xB8742A), 15);
 
-    public GameScreenPanel(JFrame frame, CardLayout cardLayout, Socket clientSocket, ObjectOutputStream objectOutputStream, ObjectInputStream objectInputStream){
+    public GameScreenPanel(JFrame frame, CardLayout cardLayout, Socket clientSocket, ObjectOutputStream objectOutputStream, ObjectInputStream objectInputStream) {
         super(frame, cardLayout);
 
         this.clientSocket = clientSocket;
@@ -42,7 +44,7 @@ public class GameScreenPanel extends ParentPanel implements ActionListener {
         this.setLayout(new BorderLayout());
 
         //Determining the width of the left and right panel:
-        int width_chess_panel = (int)(widthOfFrame*0.65);
+        int width_chess_panel = (int) (widthOfFrame * 0.65);
         int width_chat_panel = widthOfFrame - width_chess_panel;
 
         //splitting the whole screen into a leftPanel and a rightPanel:
@@ -62,7 +64,7 @@ public class GameScreenPanel extends ParentPanel implements ActionListener {
         chess_panel.add(new HorizontalSpace(widthOfFrame, 7));
 
         //Heading (PLAYER 1):
-        JLabel player1 = new JLabel("Player 1");
+        player1 = new JLabel("Player 1");
         player1.setFont(getFont("Roboto-Medium", getResponsiveFontSize(68)));
         player1.setForeground(new Color(0xE79E4F));
         chess_panel.add(player1, BorderLayout.PAGE_START);
@@ -77,7 +79,7 @@ public class GameScreenPanel extends ParentPanel implements ActionListener {
         chess_panel.add(new HorizontalSpace(widthOfFrame, 0));
 
         //Heading (PLAYER 2):
-        JLabel player2 = new JLabel("Player 2");
+        player2 = new JLabel("Player 2");
         player2.setFont(getFont("Roboto-Medium", getResponsiveFontSize(68)));
         player2.setForeground(new Color(0xE79E4F));
         chess_panel.add(player2, BorderLayout.PAGE_END);
@@ -88,25 +90,25 @@ public class GameScreenPanel extends ParentPanel implements ActionListener {
         chat_panel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
         //SPECTATORS PANEL:
-        chat_panel.add(new Specs(width_chat_panel,heightOfFrame));
+        chat_panel.add(new Specs(width_chat_panel, heightOfFrame));
 
         //adding horizontal space of 0 so next component goes to next line:
         chat_panel.add(new HorizontalSpace(widthOfFrame, 0));
 
         //adding the chat box:
-        chat_panel.add(new ChatBox((int)(width_chat_panel*0.9),(int)(heightOfFrame/1.9), this.objectOutputStream),FlowLayout.CENTER);
+        chat_panel.add(new ChatBox((int) (width_chat_panel * 0.9), (int) (heightOfFrame / 1.9), this.objectOutputStream), FlowLayout.CENTER);
 
         //adding horizontal space of 0 so next component goes to next line:
-        chat_panel.add(new HorizontalSpace((int)(widthOfFrame), 0));
+        chat_panel.add(new HorizontalSpace((int) (widthOfFrame), 0));
 
         //---------------- MUTE AND DEAFEN BUTTONS----------------------
-        chat_panel.add(new FunctionalButtons(width_chat_panel,heightOfFrame));
+        chat_panel.add(new FunctionalButtons(width_chat_panel, heightOfFrame));
 
         //Making the "EXIT" button:
         EXIT.addActionListener(this);
         EXIT.setForeground(new Color(0x841522));
-        EXIT.setFont(getFont("Rambla-Bold",25));
-        EXIT.setPreferredSize(new Dimension((int)(width_chat_panel*0.9),heightOfFrame/15));
+        EXIT.setFont(getFont("Rambla-Bold", 25));
+        EXIT.setPreferredSize(new Dimension((int) (width_chat_panel * 0.9), heightOfFrame / 15));
         chat_panel.add(EXIT);
 
         //ADDING THE LEFT AND RIGHT PANEL TO THE MAIN PANEL:
@@ -115,18 +117,25 @@ public class GameScreenPanel extends ParentPanel implements ActionListener {
 
         //-----------------------End of designing------------------------//
     }
+
+    public static void initializeNames(String whitePlayer, String blackPlayer) {
+        player2.setText(whitePlayer);
+        player1.setText(blackPlayer);
+    }
+
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
-        Paint p = new GradientPaint(getWidth()*0.2f, getHeight()*0.1f, new Color(21, 3, 8, 255),
+        Paint p = new GradientPaint(getWidth() * 0.2f, getHeight() * 0.1f, new Color(21, 3, 8, 255),
                 0.0f, getHeight(), new Color(208, 108, 120, 255), false);
         g2d.setPaint(p);
         g2d.fillRect(0, 0, getWidth(), getHeight());
     }
+
     @Override
-    public void actionPerformed(ActionEvent e){
-        if(e.getSource()==EXIT){
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == EXIT) {
             frame.dispose();
         }
     }

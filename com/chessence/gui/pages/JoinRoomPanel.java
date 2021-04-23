@@ -155,7 +155,13 @@ public class JoinRoomPanel extends ParentPanel implements ActionListener {
                         }
                         SpectatorsPanel.updateSpecatators();
                     }
-                    PlayersPanel.addPlayer();
+                    if(playerNames.length==2) {
+                        PlayersPanel.playerOneInfo.remove(PlayersPanel.playerJoinSpectatorButton);
+                        SpectatorsPanel.addSpectator();
+                        SpectatorsPanel.joinPlayerButton.setEnabled(false);
+                    }
+                    else
+                        PlayersPanel.addPlayer();
                     //PlayersPanel.fixJoinSpectatorsButtonPosition();
                     ParentPanel.currentRoomID = roomId;
                     Thread readingThread = new ClientReader(clientSocket, objectInputStream);
