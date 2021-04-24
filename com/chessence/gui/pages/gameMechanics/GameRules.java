@@ -164,10 +164,7 @@ public class GameRules {
                 isSaved = true;
         }
 
-<<<<<<< HEAD
-=======
         // Changing the piece back to its original position
->>>>>>> fffef69e3dd6ccf2b4cba48349764e7aa428ce69
         boardMatrix[x][y] = checkPiece;
         boardMatrix[coordinates.getKey()][coordinates.getValue()] = tempPiece;
 
