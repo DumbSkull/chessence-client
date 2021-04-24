@@ -125,6 +125,7 @@ public class ClientReader extends Thread {
                         String whitePlayer = ((Message) receivedObject).getSecondaryMessage();
                         String blackPlayer = CreateRoomPanel.PLAYERS[0].equals(whitePlayer) ? CreateRoomPanel.PLAYERS[1] : CreateRoomPanel.PLAYERS[0];
                         Tile.isPlayerWhite = false;
+                        Tile.isCurrentTurn = false;
                         GameScreenPanel.initializeNames(whitePlayer, blackPlayer);
                         ParentPanel.cardLayout.show(ParentPanel.container, "GameScreen");
                     }

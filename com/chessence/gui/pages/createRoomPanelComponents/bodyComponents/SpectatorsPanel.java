@@ -4,7 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
+import com.chessence.Message;
 import com.chessence.gui.pages.CreateRoomPanel;
 import com.chessence.gui.pages.ParentPanel;
 import com.chessence.gui.pages.createRoomPanelComponents.RoundedButton;
@@ -31,26 +33,25 @@ public class SpectatorsPanel extends JPanel implements ActionListener {
             Color.decode(CREAM_ORANGE), Color.decode(RED), Color.decode(DARK_RED),
             10, new Dimension(200, 40));
 
-    public SpectatorsPanel(){
+    public SpectatorsPanel() {
         this.setBackground(backgroundColor);
         this.setPreferredSize(new Dimension(300, 350));
 
         //updating spectator list based on player status
-        if(CreateRoomPanel.Player_Status == 'S'){
-            if(CreateRoomPanel.SPECTATORS[0].equals("-"))
+        if (CreateRoomPanel.Player_Status == 'S') {
+            if (CreateRoomPanel.SPECTATORS[0].equals("-"))
                 CreateRoomPanel.SPECTATORS[0] = ParentPanel.username;
-            else if(CreateRoomPanel.SPECTATORS[1].equals("-"))
+            else if (CreateRoomPanel.SPECTATORS[1].equals("-"))
                 CreateRoomPanel.SPECTATORS[1] = ParentPanel.username;
 
-            else if(CreateRoomPanel.SPECTATORS[2].equals("-"))
+            else if (CreateRoomPanel.SPECTATORS[2].equals("-"))
                 CreateRoomPanel.SPECTATORS[2] = ParentPanel.username;
 
-            else if(CreateRoomPanel.SPECTATORS[3].equals("-"))
+            else if (CreateRoomPanel.SPECTATORS[3].equals("-"))
                 CreateRoomPanel.SPECTATORS[3] = ParentPanel.username;
 
             joinPlayerButton.setEnabled(true);
-        }
-        else if(CreateRoomPanel.Player_Status == 'P')
+        } else if (CreateRoomPanel.Player_Status == 'P')
             joinPlayerButton.setEnabled(false);
 
         ////////////////////////// TITLE //////////////////////////////////
@@ -122,7 +123,7 @@ public class SpectatorsPanel extends JPanel implements ActionListener {
     }
 
     //method to initialize spectator to the panel (called in the main menu panel)
-    public static void initializeSpectator(){
+    public static void initializeSpectator() {
         CreateRoomPanel.SPECTATORS[2] = ParentPanel.username;
         spectator3.setText(ParentPanel.username);
     }
@@ -135,22 +136,19 @@ public class SpectatorsPanel extends JPanel implements ActionListener {
     }
 
     //method to add a spectator into the panel
-    public static void addSpectator(){
+    public static void addSpectator() {
         CreateRoomPanel.Player_Status = 'S';
 
-        if(CreateRoomPanel.SPECTATORS[0].equals("-")){
+        if (CreateRoomPanel.SPECTATORS[0].equals("-")) {
             CreateRoomPanel.SPECTATORS[0] = ParentPanel.username;
             spectator1.setText(CreateRoomPanel.SPECTATORS[0]);
-        }
-        else if(CreateRoomPanel.SPECTATORS[1].equals("-")){
+        } else if (CreateRoomPanel.SPECTATORS[1].equals("-")) {
             CreateRoomPanel.SPECTATORS[1] = ParentPanel.username;
             spectator2.setText(CreateRoomPanel.SPECTATORS[1]);
-        }
-        else if(CreateRoomPanel.SPECTATORS[2].equals("-")){
+        } else if (CreateRoomPanel.SPECTATORS[2].equals("-")) {
             CreateRoomPanel.SPECTATORS[2] = ParentPanel.username;
             spectator3.setText(CreateRoomPanel.SPECTATORS[2]);
-        }
-        else if(CreateRoomPanel.SPECTATORS[3].equals("-")){
+        } else if (CreateRoomPanel.SPECTATORS[3].equals("-")) {
             CreateRoomPanel.SPECTATORS[3] = ParentPanel.username;
             spectator4.setText(CreateRoomPanel.SPECTATORS[3]);
         }
@@ -160,22 +158,19 @@ public class SpectatorsPanel extends JPanel implements ActionListener {
     }
 
     //method to remove a spectator from the panel
-    public static void removeSpectator(){
+    public static void removeSpectator() {
         CreateRoomPanel.Player_Status = 'P';
 
-        if(CreateRoomPanel.SPECTATORS[0].equals(ParentPanel.username)){
+        if (CreateRoomPanel.SPECTATORS[0].equals(ParentPanel.username)) {
             CreateRoomPanel.SPECTATORS[0] = "-";
             spectator1.setText(CreateRoomPanel.SPECTATORS[0]);
-        }
-        else if(CreateRoomPanel.SPECTATORS[1].equals(ParentPanel.username)){
+        } else if (CreateRoomPanel.SPECTATORS[1].equals(ParentPanel.username)) {
             CreateRoomPanel.SPECTATORS[1] = "-";
             spectator2.setText(CreateRoomPanel.SPECTATORS[1]);
-        }
-        else if(CreateRoomPanel.SPECTATORS[2].equals(ParentPanel.username)){
+        } else if (CreateRoomPanel.SPECTATORS[2].equals(ParentPanel.username)) {
             CreateRoomPanel.SPECTATORS[2] = "-";
             spectator3.setText(CreateRoomPanel.SPECTATORS[2]);
-        }
-        else if(CreateRoomPanel.SPECTATORS[3].equals(ParentPanel.username)){
+        } else if (CreateRoomPanel.SPECTATORS[3].equals(ParentPanel.username)) {
             CreateRoomPanel.SPECTATORS[3] = "-";
             spectator4.setText(CreateRoomPanel.SPECTATORS[3]);
         }
@@ -184,12 +179,20 @@ public class SpectatorsPanel extends JPanel implements ActionListener {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e){
-        if(e.getSource() == joinPlayerButton){
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == joinPlayerButton) {
 
-            //removes spectator and add to player panel when join spectator button is clicked
-            removeSpectator();
-            PlayersPanel.addPlayer();
+            var changeStatusMessage = new Message("", "playerChangeStatus");
+            try {
+                CreateRoomPanel.objectOutputStream.writeObject(changeStatusMessage);
+
+                //removes spectator and add to player panel when join spectator button is clicked
+                removeSpectator();
+                PlayersPanel.addPlayer();
+
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
 
             repaint();
             revalidate();
@@ -202,7 +205,7 @@ public class SpectatorsPanel extends JPanel implements ActionListener {
 
         //adding curves to the corners of the panel
         Dimension arcs = new Dimension(cornerRadius, cornerRadius);
-        WIDTH= getWidth();
+        WIDTH = getWidth();
         HEIGHT = getHeight();
         Graphics2D g2D = (Graphics2D) g;
         g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -210,8 +213,8 @@ public class SpectatorsPanel extends JPanel implements ActionListener {
         //Draws the rounded panel with borders.
         g2D.setColor(backgroundColor);
 
-        g2D.fillRoundRect(0, 0, WIDTH-1, HEIGHT-1, arcs.width, arcs.height); //paint background
+        g2D.fillRoundRect(0, 0, WIDTH - 1, HEIGHT - 1, arcs.width, arcs.height); //paint background
         g2D.setColor(backgroundColor);
-        g2D.drawRoundRect(0, 0, WIDTH-1, HEIGHT-1, arcs.width, arcs.height); //paint border
+        g2D.drawRoundRect(0, 0, WIDTH - 1, HEIGHT - 1, arcs.width, arcs.height); //paint border
     }
 }

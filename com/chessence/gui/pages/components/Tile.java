@@ -3,6 +3,7 @@ package com.chessence.gui.pages.components;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -170,7 +171,9 @@ public class Tile extends JPanel {
         if(CreateRoomPanel.Player_Status == 'S')
             return;
         //check if it is current player's turn:
-        if (isCurrentTurn && (this.piece.isWhite() == Tile.isPlayerWhite)) {
+        if (isCurrentTurn) {
+            if(this.piece!=null && (this.piece.isWhite() != Tile.isPlayerWhite))
+                return;
             //immediately set isUpdated to false to stop other tiles form unnecessarily updating:
             isUpdated = false;
 
@@ -190,7 +193,11 @@ public class Tile extends JPanel {
                 int[] from = {currentSelected.getKey(), currentSelected.getValue()};
                 int[] to = {tileCoordinates.getKey(), tileCoordinates.getValue()};
                 var moveToSendEveryone = new Move(from, to);
-
+                try {
+                    CreateRoomPanel.objectOutputStream.writeObject(moveToSendEveryone);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 //---------------------------------------------------------
 
                 GameRules.gameUpdate(boardMatrix);

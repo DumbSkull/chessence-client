@@ -4,7 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
+import com.chessence.Message;
 import com.chessence.gui.pages.ParentPanel;
 import com.chessence.gui.pages.CreateRoomPanel;
 import com.chessence.gui.pages.createRoomPanelComponents.RoundedButton;
@@ -199,12 +201,18 @@ public class PlayersPanel extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e){
         if(e.getSource() == playerJoinSpectatorButton){
 
-            //removes player and add spectator panel when join spectator button is clicked
-            removePlayer();
-            SpectatorsPanel.addSpectator();
+            var changeStatusMessage = new Message("", "playerChangeStatus");
+            try {
+                CreateRoomPanel.objectOutputStream.writeObject(changeStatusMessage);
 
-            //
+                //removes player and add spectator panel when join spectator button is clicked
+                removePlayer();
+                SpectatorsPanel.addSpectator();
 
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+            
             repaint();
             revalidate();
         }
