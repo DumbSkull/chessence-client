@@ -1,7 +1,13 @@
 package com.chessence.gui.pages.gameMechanics;
 
+import com.chessence.Message;
+import com.chessence.gui.pages.CreateRoomPanel;
+import com.chessence.gui.pages.GameOverPanel;
+import com.chessence.gui.pages.ParentPanel;
 import javafx.util.Pair;
 
+import java.awt.print.PrinterAbortException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public abstract class AbstractPiece{
@@ -23,6 +29,19 @@ public abstract class AbstractPiece{
         //FUNCTION TO MOVE THIS PARTICULAR PIECE:
         if (getValidDestinations(boardMatrix, false).contains(coordinates)) {
             //check if the destination coordinate is a valid coordinate
+
+            if(boardMatrix[coordinates.getKey()][coordinates.getValue()] instanceof King){
+                System.out.println("GAME OVER");
+                GameOverPanel.updateWinner(ParentPanel.username);
+                var winnerMessage = new Message(ParentPanel.username, "gameOver");
+                try {
+                    CreateRoomPanel.objectOutputStream.writeObject(winnerMessage);
+                    CreateRoomPanel.cardLayout.show(CreateRoomPanel.container, "GameOver");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    System.out.println("\nError sending the victory message to the server!");
+                }
+            }
 
             if(boardMatrix[this.coordinates.getKey()][this.coordinates.getValue()] instanceof King)
             {

@@ -167,7 +167,7 @@ public class ClientReader extends Thread {
                         }
                     }
                     //=======================================================================================================
-                    //When someone leaves/forfeits the lobby:
+                    //When the game is over:
                     else if (((Message) receivedObject).getTypeOfMessage().contains("gameOver")) {
                         String winnersName = ((Message) receivedObject).getMessage();
                         GameOverPanel.updateWinner(winnersName);
