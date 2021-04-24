@@ -75,7 +75,7 @@ public class JoinRoomPanel extends ParentPanel implements ActionListener {
         usernameLabel.setForeground(new Color(0xFFDEEE));
         topPanel.add(usernameLabel);
         //making the textfield:
-        roomIdField = new TextField(400, 50, "TEST123");
+        roomIdField = new TextField(400, 50, "");
         roomIdField.setFont(getFont("Roboto-Medium", getResponsiveFontSize(32)));
         topPanel.add(roomIdField);
         topPanel.add(new HorizontalSpace(widthOfFrame, (int) (0.074074 * heightOfFrame)));
@@ -131,6 +131,7 @@ public class JoinRoomPanel extends ParentPanel implements ActionListener {
                 Message response = null;
                 try {
                     response = (Message) objectInputStream.readObject();
+                    System.out.println("\nReceived Join ROom request");
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }

@@ -30,6 +30,10 @@ public abstract class AbstractPiece{
             }
             boardMatrix[coordinates.getKey()][coordinates.getValue()] = this;
         }
+        else
+        {
+            System.out.println("NOT VALID DESTINATION!");
+        }
         return boardMatrix;
     }
 

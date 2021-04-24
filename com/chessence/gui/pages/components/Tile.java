@@ -172,7 +172,7 @@ public class Tile extends JPanel {
             return;
         //check if it is current player's turn:
         if (isCurrentTurn) {
-            if(this.piece!=null && (this.piece.isWhite() != Tile.isPlayerWhite))
+            if(this.piece!=null && ((this.piece.isWhite()!=Tile.isPlayerWhite) && !highlightedCoordinates.contains(this.tileCoordinates)))
                 return;
             //immediately set isUpdated to false to stop other tiles form unnecessarily updating:
             isUpdated = false;

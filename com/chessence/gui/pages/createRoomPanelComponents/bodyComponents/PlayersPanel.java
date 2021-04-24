@@ -212,7 +212,7 @@ public class PlayersPanel extends JPanel implements ActionListener {
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
-            
+
             repaint();
             revalidate();
         }

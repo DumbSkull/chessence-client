@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -136,6 +137,13 @@ public class GameScreenPanel extends ParentPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == EXIT) {
+            try {
+                CreateRoomPanel.objectOutputStream.close();
+                CreateRoomPanel.objectInputStream.close();
+                CreateRoomPanel.clientSocket.close();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
             frame.dispose();
         }
     }
