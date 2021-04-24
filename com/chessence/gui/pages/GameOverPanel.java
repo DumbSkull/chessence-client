@@ -1,9 +1,6 @@
 package com.chessence.gui.pages;
 
-import com.chessence.gui.pages.components.Board;
-import com.chessence.gui.pages.components.HorizontalLine;
-import com.chessence.gui.pages.components.HorizontalSpace;
-import com.chessence.gui.pages.components.RoundedButton;
+import com.chessence.gui.pages.components.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -69,9 +66,14 @@ public class GameOverPanel extends ParentPanel implements ActionListener {
         if (e.getSource() == goBackButton) {
             //clear the game data (boardMatrix etc etc) here before going to CreateRoom
             //------------------
-            Board.initializeBoard();
-            Board.initializeTiles();
-            GameScreenPanel.board.repaint();
+            //Board.initializeBoard();
+            //Board.initializeTiles();
+
+            JPanel gameScreenPanel = new GameScreenPanel(frame, cardLayout, MainMenuPanel.clientSocket, MainMenuPanel.objectOutputStream, MainMenuPanel.objectInputStream);
+            Tile.isCurrentTurn = true;
+            container.remove(5);
+            container.add(gameScreenPanel, "GameScreen");
+            //GameScreenPanel.board.repaint();
             //-----------------
 
             cardLayout.show(container, "CreateRoom");

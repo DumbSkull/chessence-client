@@ -117,12 +117,14 @@ public class JoinRoomPanel extends ParentPanel implements ActionListener {
         if (e.getSource() == joinRoomButton) {
             cardLayout.show(container, "LoadingScreen");
             String roomId = roomIdField.getText();
+            System.out.println("\njoin room button clicked");
 
             //socket code to work before joining the room:
             Message roomIdMessage = new Message(roomId, "lobbyInfo", false);
             roomIdMessage.setSecondaryMessage(ParentPanel.username);
             try {
                 objectOutputStream.writeObject(roomIdMessage);
+                System.out.println("\nsent the request to join lobby");
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
@@ -130,6 +132,7 @@ public class JoinRoomPanel extends ParentPanel implements ActionListener {
                 Message response = null;
                 try {
                     response = (Message) objectInputStream.readObject();
+                    System.out.println("\nread response from server");
                     System.out.println("\nReceived Join ROom request");
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
@@ -138,7 +141,7 @@ public class JoinRoomPanel extends ParentPanel implements ActionListener {
                     System.out.println("\nERROR: Enter a valid room ID!");
                     cardLayout.show(container, "JoinRoom");
                 } else if (response.getMessage().contains("_success")) {
-
+                    System.out.println("\nit was a success response!");
                     var splitNames = response.getSecondaryMessage().split("_#SPECTATORS#_");
                     var playerNames = splitNames[0].split(",");
                     CreateRoomPanel.clearPlayers();
@@ -164,8 +167,10 @@ public class JoinRoomPanel extends ParentPanel implements ActionListener {
                         PlayersPanel.addPlayer();
                     //PlayersPanel.fixJoinSpectatorsButtonPosition();
                     ParentPanel.currentRoomID = roomId;
+                    System.out.println("\nHere gonna start reading thread!");
                     Thread readingThread = new ClientReader(clientSocket, objectInputStream);
                     readingThread.start();
+                    System.out.println("\nStarted reading thread!");
                     cardLayout.show(container, "CreateRoom");
                 }
             } catch (ClassNotFoundException ex) {

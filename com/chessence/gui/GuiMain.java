@@ -48,14 +48,13 @@ public class GuiMain extends JFrame {
         JPanel loadingPanel = new LoadingPanel(frame, cardLayout);
         JPanel gameOverPanel = new GameOverPanel(frame, cardLayout);
 
-
         //adding the panels to the container:
         container.add(mainMenuPanel, "MainMenu");
         container.add(joinRoomPanel, "JoinRoom");
         container.add(createRoomPanel, "CreateRoom");
-        container.add(gameScreenPanel, "GameScreen");
         container.add(loadingPanel, "LoadingScreen");
         container.add(gameOverPanel, "GameOver");
+        container.add(gameScreenPanel, "GameScreen");
 
         //starting with the MainMenu panel (change it to any other panel if you want)
         cardLayout.show(container, "MainMenu");

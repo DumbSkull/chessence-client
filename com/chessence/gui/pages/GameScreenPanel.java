@@ -24,8 +24,12 @@ public class GameScreenPanel extends ParentPanel implements ActionListener {
     public ObjectInputStream objectInputStream;
     public static JLabel player1 = null;
     public static JLabel player2 = null;
+    public static int heightOfFrame;
+    public static int widthOfFrame;
+    public static int width_chess_panel = (int) (widthOfFrame * 0.65);
+    public static int width_chat_panel = widthOfFrame - width_chess_panel;
 
-    public static Board board;
+    public static Board board = new Board( (int) (frame.getBounds().width * 0.65), frame.getBounds().height, false);
 
     //private AbstractPiece boardMatrix[][] = new AbstractPiece[8][8];
     public JButton EXIT = new RoundedButton((CreateRoomPanel.Player_Status == 'P' ? "Forfeit Match" : "Leave Lobby"), new Color(0xE79E4F), new Color(0xB8742A), 15);
@@ -37,19 +41,20 @@ public class GameScreenPanel extends ParentPanel implements ActionListener {
         this.objectOutputStream = objectOutputStream;
         this.objectInputStream = objectInputStream;
 
+        board = new Board( (int) (frame.getBounds().width * 0.65), frame.getBounds().height, false);
 
         frame.setLocationRelativeTo(null);
         //Getting frame dimensions:
         Rectangle r = frame.getBounds();
-        int heightOfFrame = r.height;
-        int widthOfFrame = r.width;
+        this.heightOfFrame = frame.getBounds().height;
+        this.widthOfFrame = frame.getBounds().width;
 
         //Setting the layout of the main entire panel as borderLayout
         this.setLayout(new BorderLayout());
 
         //Determining the width of the left and right panel:
-        int width_chess_panel = (int) (widthOfFrame * 0.65);
-        int width_chat_panel = widthOfFrame - width_chess_panel;
+        this.width_chess_panel = (int) (widthOfFrame * 0.65);
+        this.width_chat_panel = widthOfFrame - width_chess_panel;
 
         //splitting the whole screen into a leftPanel and a rightPanel:
         JPanel chess_panel = new JPanel();
@@ -77,7 +82,7 @@ public class GameScreenPanel extends ParentPanel implements ActionListener {
         chess_panel.add(new HorizontalSpace(widthOfFrame, 0));
 
 
-        board = new Board(width_chess_panel, heightOfFrame, isPlayerWhite);
+        //board = new Board(width_chess_panel, heightOfFrame, isPlayerWhite);
         //adding the chess board:
         chess_panel.add(board, BorderLayout.CENTER);
 
@@ -145,6 +150,16 @@ public class GameScreenPanel extends ParentPanel implements ActionListener {
             var forfeitMessage = new Message(ParentPanel.username, "playerForfeit");
             try {
                 this.objectOutputStream.writeObject(forfeitMessage);
+                System.out.println("\nSent the forfeit message!");
+                JPanel gameScreenPanel = new GameScreenPanel(frame, cardLayout, MainMenuPanel.clientSocket, MainMenuPanel.objectOutputStream, MainMenuPanel.objectInputStream);
+                Tile.isCurrentTurn = true;
+                container.remove(5);
+                container.add(gameScreenPanel, "GameScreen");
+                GameScreenPanel.board.repaint();
+                GameScreenPanel.board.revalidate();
+                gameScreenPanel.revalidate();
+                gameScreenPanel.repaint();
+                container.revalidate();
                 cardLayout.show(container, "MainMenu");
             } catch (IOException ioException) {
                 ioException.printStackTrace();

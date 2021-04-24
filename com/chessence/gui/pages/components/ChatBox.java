@@ -37,15 +37,6 @@ public class ChatBox extends JPanel {
         this.H = H;
         this.objectOutputStream = objectOutputStream;
 
-        MESSAGES.add(new ChatMessage("This is the NP Project", true));
-        MESSAGES.add(new ChatMessage("Wohoooooooooo awesomee okay bye", false));
-        MESSAGES.add(new ChatMessage("Jingala hurr hurrrr", true));
-        MESSAGES.add(new ChatMessage("also java sucks", false));
-        MESSAGES.add(new ChatMessage("Wasdasdwesomee okay bye", false));
-        MESSAGES.add(new ChatMessage("Jingaaasdasdhurr hurrrr", true));
-        MESSAGES.add(new ChatMessage("also asdasdcks", false));
-        MESSAGES.add(new ChatMessage("Hello wazzuuppppp CO2 IS BADllo wazzuuppppp CO2 IS BADllo wazzuuppppp CO2 IS BADHello wazzuuppppp CO2 IS BADllo wazzuuppppp CO2 IS BADllo wazzuuppppp CO2 IS BADHello wazzuuppppp CO2 IS BADllo wazzuuppppp CO2 IS BADllo wazzuuppppp CO2 IS BAD", true));
-
         FlowLayout layout = (FlowLayout) super.getLayout();
         layout.setHgap(10);
         layout.setVgap(10);

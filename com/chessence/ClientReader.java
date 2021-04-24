@@ -35,8 +35,8 @@ public class ClientReader extends Thread {
         while (true) {
             try {
                 Object receivedObject = objectInputStream.readObject();
+                System.out.println("\nReceived a message!LELE");
                 if (receivedObject instanceof Message) {
-                    System.out.println("\nReceived a message at client!");
                     //=======================================================================================================
                     //if Message is of type chat:
                     if (((Message) receivedObject).getTypeOfMessage().contains("chat")) {
@@ -139,8 +139,9 @@ public class ClientReader extends Thread {
                     //When someone leaves/forfeits the lobby:
                     else if (((Message) receivedObject).getTypeOfMessage().contains("playerForfeit")) {
                         String playersName = ((Message) receivedObject).getMessage();
+                        System.out.println("\nReceived forfeit message for " + playersName);
                         if (((Message) receivedObject).getSecondaryMessage().equals("player")) {
-
+                            System.out.println("\nThe forfeiter person was a player! ");
                             //end the game go back to lobby:
                             CreateRoomPanel.PLAYERS[0] = CreateRoomPanel.PLAYERS[0].equals(playersName) ? CreateRoomPanel.PLAYERS[1] : CreateRoomPanel.PLAYERS[0];
                             CreateRoomPanel.PLAYERS[1] = "-";
@@ -151,7 +152,7 @@ public class ClientReader extends Thread {
                             CreateRoomPanel.cardLayout.show(CreateRoomPanel.container, "GameOver");
 
                         } else if (((Message) receivedObject).getSecondaryMessage().equals("spectator")) {
-
+                            System.out.println("\nThe forfeiter person was a spectator! ");
                             //just remove from the spectator's list:
                             CreateRoomPanel.clearSpecatators();
                             var newSpecList = Arrays.stream(CreateRoomPanel.SPECTATORS)
@@ -164,6 +165,13 @@ public class ClientReader extends Thread {
                             SpectatorsPanel.updateSpectators();
                             Specs.updateSpecButtons();
                         }
+                    }
+                    //=======================================================================================================
+                    //When someone leaves/forfeits the lobby:
+                    else if (((Message) receivedObject).getTypeOfMessage().contains("gameOver")) {
+                        String winnersName = ((Message) receivedObject).getMessage();
+                        GameOverPanel.updateWinner(winnersName);
+                        CreateRoomPanel.cardLayout.show(CreateRoomPanel.container, "GameOver");
                     }
                 } else if (receivedObject instanceof Move) {
                     //=======================================================================================================
@@ -208,5 +216,6 @@ public class ClientReader extends Thread {
 
             //System.out.println(received);
         }
+        System.out.println("\nEnding the listening thread... ");
     }
 }

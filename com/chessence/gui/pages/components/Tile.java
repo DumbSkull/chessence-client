@@ -5,6 +5,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 
 import com.chessence.Move;
@@ -46,7 +47,7 @@ public class Tile extends JPanel {
         this.tileMatrix = Board.tileMatrix;
         this.boardMatrix = Board.boardMatrix;
         this.isWhite = isWhite;
-        this.piece = boardMatrix[tileCoordinates.getKey()][tileCoordinates.getValue()];
+        this.piece = Board.boardMatrix[tileCoordinates.getKey()][tileCoordinates.getValue()];
         this.imagePath = piece != null ? piece.getImagePath() : null;
         this.setLayout(new BorderLayout());
         this.tileCoordinates = tileCoordinates;
@@ -75,7 +76,7 @@ public class Tile extends JPanel {
     }
 
     //the validateTiles function validates only those tiles mentioned in the arguments
-    private void validateTiles(ArrayList<Pair<Integer, Integer>> highlightedCoordinates, AbstractPiece boardMatrix[][]) {
+    private void validateTiles(ArrayList<Pair<Integer, Integer>> highlightedCoordinates, AbstractPiece[][] boardMatrix) {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if ((highlightedCoordinates != null && highlightedCoordinates.contains(tileMatrix[i][j].tileCoordinates)) || (tileMatrix[i][j].tileCoordinates == currentSelected)) {
@@ -170,12 +171,15 @@ public class Tile extends JPanel {
     private void mouseClickAction() {
         if(CreateRoomPanel.Player_Status == 'S')
             return;
+        System.out.println("\nMouse clicked!");
         //check if it is current player's turn:
         if (isCurrentTurn) {
-            if(this.piece!=null && ((this.piece.isWhite()!=Tile.isPlayerWhite) && !highlightedCoordinates.contains(this.tileCoordinates)))
+            System.out.println("\nIS CURRENT TURN!");
+            if(this.piece!=null && ((this.piece.isWhite()!=Tile.isPlayerWhite) && highlightedCoordinates!=null && !highlightedCoordinates.contains(this.tileCoordinates)))
                 return;
             //immediately set isUpdated to false to stop other tiles form unnecessarily updating:
             isUpdated = false;
+            System.out.println("\nNumber of nulls in board matrix: " + Arrays.stream(Board.boardMatrix).filter(Objects::isNull).count());
 
             //store the previously selected tile coordinates, and the coordinates of the previously highlighted tiles:
             var prevSelected = currentSelected;
@@ -232,6 +236,10 @@ public class Tile extends JPanel {
             if (piece != null) {
                 highlightedCoordinates = piece.getValidDestinations(boardMatrix, false);
             }
+        }
+        else
+        {
+            System.out.println("\nis not current turn :(");
         }
     }
 }

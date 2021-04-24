@@ -59,6 +59,7 @@ public class Board extends JPanel {
 
     public static void initializeTiles() {
         //Initializing all the required tiles:
+        tileMatrix = new Tile[8][8];
         boolean white = true;
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -72,6 +73,7 @@ public class Board extends JPanel {
 
     public static void initializeBoard() {
         //for all the black pieces:
+        boardMatrix = new AbstractPiece[8][8];
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 8; j++) {
                 if (i == 0) {
