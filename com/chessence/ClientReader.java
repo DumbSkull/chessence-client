@@ -13,6 +13,7 @@ import javafx.util.Pair;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
+import java.net.SocketException;
 
 public class ClientReader extends Thread {
 
@@ -89,10 +90,9 @@ public class ClientReader extends Thread {
                                     break;
                                 }
                             }
-                            if(CreateRoomPanel.Player_Status=='S')
+                            if (CreateRoomPanel.Player_Status == 'S')
                                 SpectatorsPanel.joinPlayerButton.setEnabled(true);
-                        }
-                        else if(((Message) receivedObject).getSecondaryMessage().contains("wasSpectator")){
+                        } else if (((Message) receivedObject).getSecondaryMessage().contains("wasSpectator")) {
                             for (int i = 0; i < 4; i++) {
                                 if (CreateRoomPanel.SPECTATORS[i].contains(movedPlayersName)) {
                                     CreateRoomPanel.SPECTATORS[i] = "-";
@@ -105,8 +105,8 @@ public class ClientReader extends Thread {
                                     break;
                                 }
                             }
-                            if(!CreateRoomPanel.PLAYERS[1].equals("-")){
-                                if(CreateRoomPanel.Player_Status=='S')
+                            if (!CreateRoomPanel.PLAYERS[1].equals("-")) {
+                                if (CreateRoomPanel.Player_Status == 'S')
                                     SpectatorsPanel.joinPlayerButton.setEnabled(false);
                             }
                         }
@@ -115,13 +115,13 @@ public class ClientReader extends Thread {
                     }
                     //=======================================================================================================
                     //quitting this while loop and hence finishing the thread itself.
-                    else if(((Message) receivedObject).getTypeOfMessage().contains("playerLeftLobby")){
+                    else if (((Message) receivedObject).getTypeOfMessage().contains("playerLeftLobby")) {
                         break;
                     }
 
                     //=======================================================================================================
                     //When the opponent starts the game
-                    else if(((Message) receivedObject).getTypeOfMessage().contains("gameStarted")){
+                    else if (((Message) receivedObject).getTypeOfMessage().contains("gameStarted")) {
                         String whitePlayer = ((Message) receivedObject).getSecondaryMessage();
                         String blackPlayer = CreateRoomPanel.PLAYERS[0].equals(whitePlayer) ? CreateRoomPanel.PLAYERS[1] : CreateRoomPanel.PLAYERS[0];
                         Tile.isPlayerWhite = false;
@@ -130,13 +130,15 @@ public class ClientReader extends Thread {
                         ParentPanel.cardLayout.show(ParentPanel.container, "GameScreen");
                     }
                 } else if (receivedObject instanceof Move) {
+                    //=======================================================================================================
+                    //When the opponent makes a move:
                     var move = (Move) receivedObject;
 
                     //updating on our board:
 
                     System.out.println("\nMoving on our board! ");
                     //update the boardMatrix with the move instruction:
-                    Board.boardMatrix = Board.boardMatrix[move.getFrom()[0]][move.getFrom()[1]].move(new Pair<>(move.getTo()[0],  move.getTo()[1]), Board.boardMatrix);
+                    Board.boardMatrix = Board.boardMatrix[move.getFrom()[0]][move.getFrom()[1]].move(new Pair<>(move.getTo()[0], move.getTo()[1]), Board.boardMatrix);
 
                     //set all the variables to null has the piece is no more in the current tile:
                     Tile.highlightedCoordinates = null;
@@ -158,6 +160,9 @@ public class ClientReader extends Thread {
                     Tile.isCurrentTurn = true;
                     System.out.println("\nMove operation: [" + move.getFrom()[0] + ", " + move.getFrom()[1] + "] -> [" + move.getTo()[0] + ", " + move.getTo()[1] + "]");
                 }
+
+            } catch (SocketException se) {
+                break;
             } catch (IOException e) {
                 e.printStackTrace();
                 continue;
@@ -165,6 +170,7 @@ public class ClientReader extends Thread {
                 e.printStackTrace();
                 break;
             }
+
             //System.out.println(received);
         }
     }
