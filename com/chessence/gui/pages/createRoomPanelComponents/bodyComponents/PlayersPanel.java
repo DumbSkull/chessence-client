@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.Arrays;
 
 import com.chessence.Message;
 import com.chessence.gui.pages.ParentPanel;
@@ -147,6 +148,20 @@ public class PlayersPanel extends JPanel implements ActionListener {
     public static void updatePlayerNames(){
         playerOneName.setText(CreateRoomPanel.PLAYERS[0]);
         playerTwoName.setText(CreateRoomPanel.PLAYERS[1]);
+        if(Arrays.stream(CreateRoomPanel.SPECTATORS).filter(name -> name.equals("-")).count()>0){
+            if(playerOneName.getText().equals(ParentPanel.username)){
+                playerOneInfo.remove(playerJoinSpectatorButton);
+                playerOneInfo.add(playerJoinSpectatorButton);
+            }
+            else if(playerTwoName.getText().equals(ParentPanel.username)){
+                playerTwoInfo.remove(playerJoinSpectatorButton);
+                playerTwoInfo.add(playerJoinSpectatorButton);
+            }
+        }
+        else{
+            playerOneInfo.remove(playerJoinSpectatorButton);
+            playerTwoInfo.remove(playerJoinSpectatorButton);
+        }
     }
 
     public static void fixJoinSpectatorsButtonPosition(){

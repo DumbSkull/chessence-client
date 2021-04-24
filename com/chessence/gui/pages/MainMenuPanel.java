@@ -164,8 +164,9 @@ public class MainMenuPanel extends ParentPanel implements ActionListener {
                 this.clientSocket.close();
             } catch (IOException ioException) {
                 ioException.printStackTrace();
+            } finally {
+                frame.dispose();    //close the frame
             }
-            frame.dispose();    //close the frame
         }
 
         if (e.getSource() == createRoomButton) {
@@ -211,8 +212,7 @@ public class MainMenuPanel extends ParentPanel implements ActionListener {
         }
 
         if (e.getSource() == playWithRandomsButton) {
-            cardLayout.show(container, "LoadingScreen");
+            //cardLayout.show(container, "LoadingScreen");
         }
     }
-
 }

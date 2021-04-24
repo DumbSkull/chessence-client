@@ -8,7 +8,6 @@ import com.chessence.gui.pages.components.RoundedButton;
 import com.chessence.gui.pages.components.TextField;
 import com.chessence.gui.pages.createRoomPanelComponents.bodyComponents.PlayersPanel;
 import com.chessence.gui.pages.createRoomPanelComponents.bodyComponents.SpectatorsPanel;
-import com.sun.javafx.scene.traversal.ParentTraversalEngine;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -154,7 +153,7 @@ public class JoinRoomPanel extends ParentPanel implements ActionListener {
                         for (int i = 0; i < spectatorNames.length; i++) {
                             CreateRoomPanel.SPECTATORS[i] = spectatorNames[i];
                         }
-                        SpectatorsPanel.updateSpecatators();
+                        SpectatorsPanel.updateSpectators();
                     }
                     if(playerNames.length==2) {
                         PlayersPanel.playerOneInfo.remove(PlayersPanel.playerJoinSpectatorButton);

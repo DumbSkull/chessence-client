@@ -1,5 +1,6 @@
 package com.chessence.gui.pages;
 
+import com.chessence.Message;
 import com.chessence.gui.pages.components.*;
 import com.chessence.gui.pages.gameMechanics.AbstractPiece;
 import com.sun.scenario.effect.Color4f;
@@ -23,6 +24,8 @@ public class GameScreenPanel extends ParentPanel implements ActionListener {
     public ObjectInputStream objectInputStream;
     public static JLabel player1 = null;
     public static JLabel player2 = null;
+
+    public static Board board;
 
     //private AbstractPiece boardMatrix[][] = new AbstractPiece[8][8];
     public JButton EXIT = new RoundedButton((CreateRoomPanel.Player_Status == 'P' ? "Forfeit Match" : "Leave Lobby"), new Color(0xE79E4F), new Color(0xB8742A), 15);
@@ -73,8 +76,10 @@ public class GameScreenPanel extends ParentPanel implements ActionListener {
         //adding horizontal space of 0 so next component goes to next line:
         chess_panel.add(new HorizontalSpace(widthOfFrame, 0));
 
+
+        board = new Board(width_chess_panel, heightOfFrame, isPlayerWhite);
         //adding the chess board:
-        chess_panel.add(new Board(width_chess_panel, heightOfFrame, isPlayerWhite), BorderLayout.CENTER);
+        chess_panel.add(board, BorderLayout.CENTER);
 
         //adding horizontal space of 0 so next component goes to next line:
         chess_panel.add(new HorizontalSpace(widthOfFrame, 0));
@@ -100,7 +105,7 @@ public class GameScreenPanel extends ParentPanel implements ActionListener {
         chat_panel.add(new ChatBox((int) (width_chat_panel * 0.9), (int) (heightOfFrame / 1.9), this.objectOutputStream), FlowLayout.CENTER);
 
         //adding horizontal space of 0 so next component goes to next line:
-        chat_panel.add(new HorizontalSpace((int) (widthOfFrame), 0));
+        chat_panel.add(new HorizontalSpace((widthOfFrame), 0));
 
         //---------------- MUTE AND DEAFEN BUTTONS----------------------
         chat_panel.add(new FunctionalButtons(width_chat_panel, heightOfFrame));
@@ -137,14 +142,13 @@ public class GameScreenPanel extends ParentPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == EXIT) {
+            var forfeitMessage = new Message(ParentPanel.username, "playerForfeit");
             try {
-                CreateRoomPanel.objectOutputStream.close();
-                CreateRoomPanel.objectInputStream.close();
-                CreateRoomPanel.clientSocket.close();
+                this.objectOutputStream.writeObject(forfeitMessage);
+                cardLayout.show(container, "MainMenu");
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
-            frame.dispose();
         }
     }
 }

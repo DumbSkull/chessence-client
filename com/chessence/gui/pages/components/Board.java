@@ -35,9 +35,43 @@ public class Board extends JPanel {
         Tile.isPlayerWhite = isPlayerWhite;
 
         //Initializing the board with all the pieces----------
-        //for all the black pieces:
         //jerin was a racist so he put the black pieces first
         // P.S: beeta is racist for thinking that putting black piece first is racist
+        // P.S P.S: only racist people give such a reply, jerin
+        initializeBoard();
+
+        //----------------------------------------------------
+        //setting the layout of the board to place all the 64 tiles:
+        FlowLayout layout = (FlowLayout) super.getLayout();
+        layout.setVgap(0);
+        layout.setHgap(0);
+        this.len = (int) (min(W, H) * 0.8);
+        this.size = new Dimension(len, len);
+
+        initializeTiles();
+
+        GameRules rules = new GameRules(boardMatrix);
+
+        super.setPreferredSize(size);
+        super.setOpaque(false);
+
+    }
+
+    public static void initializeTiles() {
+        //Initializing all the required tiles:
+        boolean white = true;
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                //declaring and initializing a new Tile object and putting in the tileMatrix:
+                tileMatrix[i][j] = new Tile(white, new Pair<Integer, Integer>(i, j), len, boardMatrix, tileMatrix);
+                white = !white; //alternatively changing the color of the tile from white and black
+            }
+            white = !white; //alternatively changing the color of the tile from white and black as a new row is occurred
+        }
+    }
+
+    public static void initializeBoard() {
+        //for all the black pieces:
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 8; j++) {
                 if (i == 0) {
@@ -91,40 +125,15 @@ public class Board extends JPanel {
                 }
             }
         }
-
-        //----------------------------------------------------
-        //setting the layout of the board to place all the 64 tiles:
-        FlowLayout layout = (FlowLayout) super.getLayout();
-        layout.setVgap(0);
-        layout.setHgap(0);
-        this.len = (int) (min(W, H) * 0.8);
-        this.size = new Dimension(len, len);
-
-        //Initializing all the required tiles:
-        boolean white = true;
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                //declaring and initializing a new Tile object and putting in the tileMatrix:
-                tileMatrix[i][j] = new Tile(white, new Pair<Integer, Integer>(i, j), len, boardMatrix, tileMatrix);
-                white = !white; //alternatively changing the color of the tile from white and black
-            }
-            white = !white; //alternatively changing the color of the tile from white and black as a new row is occurred
-        }
-
-        GameRules rules = new GameRules(boardMatrix);
-
-        super.setPreferredSize(size);
-        super.setOpaque(false);
-
     }
 
-    public static void updateBoard(){
+    public static void updateBoard() {
         boolean white = true;
         for (int x = 0; x <= 7; x++) {
             for (int y = 0; y <= 7; y++) {
                 //updating all the tiles as and when the Board is repainted or revalidated or re-rendered:
                 //the tiles are kept up to date according to the boardMatrix[][]
-                if(Tile.highlightedCoordinates!=null && Tile.highlightedCoordinates.contains(new Pair<>(x, y)))
+                if (Tile.highlightedCoordinates != null && Tile.highlightedCoordinates.contains(new Pair<>(x, y)))
                     tileMatrix[x][y].tileUpdate(white, new Pair<>(x, y), len, boardMatrix, tileMatrix);
                 white = !white;
             }
@@ -139,7 +148,7 @@ public class Board extends JPanel {
             for (int y = 0; y <= 7; y++) {
                 //updating all the tiles as and when the Board is repainted or revalidated or re-rendered:
                 //the tiles are kept up to date according to the boardMatrix[][]
-                if(Tile.highlightedCoordinates!=null && Tile.highlightedCoordinates.contains(new Pair<>(x, y)))
+                if (Tile.highlightedCoordinates != null && Tile.highlightedCoordinates.contains(new Pair<>(x, y)))
                     tileMatrix[x][y].tileUpdate(white, new Pair<>(x, y), len, boardMatrix, tileMatrix);
                 this.add(tileMatrix[x][y]);
 

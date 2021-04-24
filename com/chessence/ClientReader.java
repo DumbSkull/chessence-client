@@ -1,10 +1,12 @@
 package com.chessence;
 
 import com.chessence.gui.pages.CreateRoomPanel;
+import com.chessence.gui.pages.GameOverPanel;
 import com.chessence.gui.pages.GameScreenPanel;
 import com.chessence.gui.pages.ParentPanel;
 import com.chessence.gui.pages.components.Board;
 import com.chessence.gui.pages.components.ChatBox;
+import com.chessence.gui.pages.components.Specs;
 import com.chessence.gui.pages.components.Tile;
 import com.chessence.gui.pages.createRoomPanelComponents.bodyComponents.PlayersPanel;
 import com.chessence.gui.pages.createRoomPanelComponents.bodyComponents.SpectatorsPanel;
@@ -14,6 +16,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class ClientReader extends Thread {
 
@@ -47,10 +51,10 @@ public class ClientReader extends Thread {
                         if (((Message) receivedObject).getSecondaryMessage().contains("player")) {
                             //------------------------------------------------------------------------
                             //if player:
-                            if (CreateRoomPanel.PLAYERS[0] == "-") {
+                            if (CreateRoomPanel.PLAYERS[0].equals("-")) {
                                 CreateRoomPanel.PLAYERS[0] = ((Message) receivedObject).getMessage();
                                 PlayersPanel.updatePlayerNames();
-                            } else if (CreateRoomPanel.PLAYERS[1] == "-") {
+                            } else if (CreateRoomPanel.PLAYERS[1].equals("-")) {
                                 CreateRoomPanel.PLAYERS[1] = ((Message) receivedObject).getMessage();
                                 PlayersPanel.updatePlayerNames();
                             } else {
@@ -61,12 +65,12 @@ public class ClientReader extends Thread {
                             //------------------------------------------------------------------------
                             //if spectator:
                             for (int i = 0; i < 4; i++) {
-                                if (CreateRoomPanel.SPECTATORS[i] == "-") {
+                                if (CreateRoomPanel.SPECTATORS[i].equals("-")) {
                                     CreateRoomPanel.SPECTATORS[i] = ((Message) receivedObject).getMessage();
                                     break;
                                 }
                             }
-                            SpectatorsPanel.updateSpecatators();
+                            SpectatorsPanel.updateSpectators();
                             //------------------------------------------------------------------------
                         }
                     }
@@ -82,7 +86,7 @@ public class ClientReader extends Thread {
                                 if (CreateRoomPanel.PLAYERS[i].contains(movedPlayersName)) {
                                     CreateRoomPanel.PLAYERS[i] = "-";
                                     for (int j = 0; j < 4; j++) {
-                                        if (CreateRoomPanel.SPECTATORS[j] == "-") {
+                                        if (CreateRoomPanel.SPECTATORS[j].equals("-")) {
                                             CreateRoomPanel.SPECTATORS[j] = movedPlayersName;
                                             break;
                                         }
@@ -97,7 +101,7 @@ public class ClientReader extends Thread {
                                 if (CreateRoomPanel.SPECTATORS[i].contains(movedPlayersName)) {
                                     CreateRoomPanel.SPECTATORS[i] = "-";
                                     for (int j = 0; j < 2; j++) {
-                                        if (CreateRoomPanel.PLAYERS[j] == "-") {
+                                        if (CreateRoomPanel.PLAYERS[j].equals("-")) {
                                             CreateRoomPanel.PLAYERS[j] = movedPlayersName;
                                             break;
                                         }
@@ -111,7 +115,7 @@ public class ClientReader extends Thread {
                             }
                         }
                         PlayersPanel.updatePlayerNames();
-                        SpectatorsPanel.updateSpecatators();
+                        SpectatorsPanel.updateSpectators();
                     }
                     //=======================================================================================================
                     //quitting this while loop and hence finishing the thread itself.
@@ -126,8 +130,40 @@ public class ClientReader extends Thread {
                         String blackPlayer = CreateRoomPanel.PLAYERS[0].equals(whitePlayer) ? CreateRoomPanel.PLAYERS[1] : CreateRoomPanel.PLAYERS[0];
                         Tile.isPlayerWhite = false;
                         Tile.isCurrentTurn = false;
+                        Specs.updateSpecButtons();
                         GameScreenPanel.initializeNames(whitePlayer, blackPlayer);
                         ParentPanel.cardLayout.show(ParentPanel.container, "GameScreen");
+                    }
+
+                    //=======================================================================================================
+                    //When someone leaves/forfeits the lobby:
+                    else if (((Message) receivedObject).getTypeOfMessage().contains("playerForfeit")) {
+                        String playersName = ((Message) receivedObject).getMessage();
+                        if (((Message) receivedObject).getSecondaryMessage().equals("player")) {
+
+                            //end the game go back to lobby:
+                            CreateRoomPanel.PLAYERS[0] = CreateRoomPanel.PLAYERS[0].equals(playersName) ? CreateRoomPanel.PLAYERS[1] : CreateRoomPanel.PLAYERS[0];
+                            CreateRoomPanel.PLAYERS[1] = "-";
+                            PlayersPanel.updatePlayerNames();
+                            SpectatorsPanel.updateSpectators();
+
+                            GameOverPanel.forfeitUpdate(playersName);
+                            CreateRoomPanel.cardLayout.show(CreateRoomPanel.container, "GameOver");
+
+                        } else if (((Message) receivedObject).getSecondaryMessage().equals("spectator")) {
+
+                            //just remove from the spectator's list:
+                            CreateRoomPanel.clearSpecatators();
+                            var newSpecList = Arrays.stream(CreateRoomPanel.SPECTATORS)
+                                    .filter(name -> !name.equals(playersName))
+                                    .collect(Collectors.toList());
+                            for (int i = 0; i < newSpecList.size(); i++) {
+                                CreateRoomPanel.SPECTATORS[i] = newSpecList.get(i);
+                            }
+                            PlayersPanel.updatePlayerNames();
+                            SpectatorsPanel.updateSpectators();
+                            Specs.updateSpecButtons();
+                        }
                     }
                 } else if (receivedObject instanceof Move) {
                     //=======================================================================================================
@@ -165,7 +201,6 @@ public class ClientReader extends Thread {
                 break;
             } catch (IOException e) {
                 e.printStackTrace();
-                continue;
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
                 break;

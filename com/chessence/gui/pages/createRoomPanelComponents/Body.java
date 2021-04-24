@@ -10,6 +10,7 @@ import com.chessence.Message;
 import com.chessence.gui.pages.CreateRoomPanel;
 import com.chessence.gui.pages.GameScreenPanel;
 import com.chessence.gui.pages.ParentPanel;
+import com.chessence.gui.pages.components.Specs;
 import com.chessence.gui.pages.components.Tile;
 import com.chessence.gui.pages.createRoomPanelComponents.bodyComponents.*;
 
@@ -186,6 +187,7 @@ public class Body extends JPanel implements ActionListener {
                 String whitePlayer = ParentPanel.username;
                 String blackPlayer = CreateRoomPanel.PLAYERS[0].equals(whitePlayer) ? CreateRoomPanel.PLAYERS[1] : CreateRoomPanel.PLAYERS[0];
                 GameScreenPanel.initializeNames(whitePlayer, blackPlayer);
+                Specs.updateSpecButtons();
                 var gameStartedMessage = new Message("", "gameStarted");
                 gameStartedMessage.setSecondaryMessage(ParentPanel.username);
                 try {

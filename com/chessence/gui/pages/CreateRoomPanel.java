@@ -116,7 +116,7 @@ public class CreateRoomPanel extends ParentPanel implements ActionListener {
     public static void clearSpecatators() {
         for (int i = 0; i < 4; i++)
             CreateRoomPanel.SPECTATORS[i] = "-";
-        SpectatorsPanel.updateSpecatators();
+        SpectatorsPanel.updateSpectators();
     }
 
     public static void printPlayerDetails(){
