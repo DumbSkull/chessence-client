@@ -11,8 +11,10 @@ import java.util.Objects;
 import com.chessence.Move;
 import com.chessence.gui.pages.CreateRoomPanel;
 import com.chessence.gui.pages.gameMechanics.AbstractPiece;
-import com.chessence.gui.pages.gameMechanics.King;
 import com.chessence.gui.pages.gameMechanics.GameRules;
+import com.chessence.gui.pages.gameMechanics.King;
+import com.chessence.gui.pages.gameMechanics.Rook;
+import com.chessence.gui.pages.gameMechanics.Pawn;
 import javafx.util.Pair;
 
 import javax.swing.*;
@@ -87,6 +89,23 @@ public class Tile extends JPanel {
                     tileMatrix[i][j].validate();
                     tileMatrix[i][j].repaint();
                 }
+                // Castling Render Condition to update Rook Movement
+                else if(GameRules.isCastled(false)){
+                    if(i == 0){
+                        if(j == 0 || j == 3 || j == 5 || j == 7){
+                            tileMatrix[i][j].validate();
+                            tileMatrix[i][j].repaint();
+                        }
+                    }
+                }
+                else if(GameRules.isCastled(true)){
+                    if(i == 7){
+                        if(j == 0 || j == 3 || j == 5 || j == 7){
+                            tileMatrix[i][j].validate();
+                            tileMatrix[i][j].repaint();
+                        }
+                    }
+                }
             }
         }
     }
@@ -109,6 +128,7 @@ public class Tile extends JPanel {
                 //yea.. java is weird.
                 isUpdated = true;
                 validateTiles(highlightedCoordinates, boardMatrix);
+
             }
 
             //Removing the outdated image on the current tile:
@@ -205,6 +225,10 @@ public class Tile extends JPanel {
                 //---------------------------------------------------------
 
                 GameRules.gameUpdate(boardMatrix);
+
+                if(boardMatrix[tileCoordinates.getKey()][tileCoordinates.getValue()] != null){
+                    boardMatrix[tileCoordinates.getKey()][tileCoordinates.getValue()].startMove();
+                }
 
                 //set all the variables to null has the piece is no more in the current tile:
                 highlightedCoordinates = null;

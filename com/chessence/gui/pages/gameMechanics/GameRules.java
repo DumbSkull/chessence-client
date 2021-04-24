@@ -12,6 +12,9 @@ public class GameRules {
     private static boolean checkWhite;
     private static boolean checkBlack;
 
+    private static boolean castleWhite;
+    private static boolean castleBlack;
+
 //    private static boolean checkMateWhite = false;
 //    private static boolean checkMateBlack = false;
 
@@ -23,11 +26,11 @@ public class GameRules {
 
     private static AbstractPiece piece;
 
-
-
     public GameRules(AbstractPiece boardMatrix[][]){
         this.checkWhite = false;
         this.checkBlack = false;
+        this.castleWhite = false;
+        this.castleBlack = false;
         gameUpdate(boardMatrix);
 
     }
@@ -114,18 +117,34 @@ public class GameRules {
             return checkBlack;
     }
 
+    public static void changeCastled(boolean isWhite){
+        if(isWhite)
+            castleWhite = true;
+        else
+            castleBlack = true;
+    }
+
+    public static boolean isCastled(boolean isWhite){
+        if(isWhite)
+            return castleWhite;
+        else
+            return castleBlack;
+    }
+
     public static boolean isSavedFromCheck(AbstractPiece checkPiece, Pair<Integer, Integer> coordinates, AbstractPiece boardMatrix[][]){
         int x = checkPiece.getCoordinates().getKey();
         int y = checkPiece.getCoordinates().getValue();
 
         AbstractPiece tempPiece;
 
+        // Adding the piece in the candidate position to check if the king will escape check when its in that position
         boardMatrix[x][y] = null;
         tempPiece = boardMatrix[coordinates.getKey()][coordinates.getValue()];
         boardMatrix[coordinates.getKey()][coordinates.getValue()] = checkPiece;
 
         boolean isSaved;
 
+        // Checking if king will escape check by finding the total moves possible for the opponent and checking if king's position is in it
         if(checkPiece.isWhite()) {
             createBlackMoves(boardMatrix);
 
@@ -145,6 +164,7 @@ public class GameRules {
                 isSaved = true;
         }
 
+        // Changing the piece back to its original position
         boardMatrix[x][y] = checkPiece;
         boardMatrix[coordinates.getKey()][coordinates.getValue()] = tempPiece;
 
